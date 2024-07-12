@@ -13,6 +13,7 @@ public class UI : Singleton<UI>
 
     void Start()
     {
+        OnInit();
         UpdateScore(0);
     }
     void Update()
@@ -42,6 +43,28 @@ public class UI : Singleton<UI>
     {
         player.Score += scoreToAdd;
         score.text = $"Score: {player.Score}";
+    }
+
+    protected RectTransform m_RectTransform;
+    private Animator m_Animator;
+    private float m_OffsetY = 0;
+    protected void OnInit()
+    {
+        m_RectTransform = GetComponent<RectTransform>();
+        m_Animator = GetComponent<Animator>();
+
+        // xu ly tai tho
+        float ratio = (float)Screen.height / (float)Screen.width;
+        if (ratio > 2.1f)
+        {
+            Vector2 leftBottom = m_RectTransform.offsetMin;
+            Vector2 rightTop = m_RectTransform.offsetMax;
+            rightTop.y = -100f;
+            m_RectTransform.offsetMax = rightTop;
+            leftBottom.y = 0f;
+            m_RectTransform.offsetMin = leftBottom;
+            m_OffsetY = 100f;
+        }
     }
 
 }
