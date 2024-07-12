@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public const int SCORE_PER_BALL = 5;
 
     [SerializeField] private Animator anim;
+    [SerializeField] private Rigidbody rb;
 
     private float speed = 5.0f;
     private float velocity = 0.0f;
@@ -46,11 +47,42 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
+        //------------PC-----------------
+        // Vector3 inputDirection = new Vector3(Input.GetAxis("Vertical"), 0, -Input.GetAxis("Horizontal"));
 
-        Vector3 inputDirection = new Vector3(Input.GetAxis("Vertical"), 0, -Input.GetAxis("Horizontal"));
+        // if (inputDirection != Vector3.zero)
+        // {
+        //     if (velocity < 1)
+        //     {
+        //         velocity += Time.deltaTime * acceleration;
+        //     }
 
-        if (inputDirection != Vector3.zero)
+        //     // Rotate towards the input direction
+        //     transform.rotation = Quaternion.Slerp(
+        //         transform.rotation,
+        //         Quaternion.LookRotation(inputDirection),
+        //         Time.deltaTime * rotationSpeed
+        //     );
+
+        //     transform.position += inputDirection * speed * Time.deltaTime * velocity;
+        //     anim.SetFloat(blendHash, velocity);
+        // }
+        // else
+        // {
+        //     if (velocity > 0)
+        //     {
+        //         velocity -= Time.deltaTime * deceleration;
+        //     }
+
+        //     anim.SetFloat(blendHash, velocity);
+        // }
+
+        // Mobile
+        if (Input.GetMouseButton(0) && JoyStick.direction != Vector3.zero)
         {
+            rb.MovePosition(rb.position + JoyStick.direction * speed * Time.deltaTime);
+            transform.position = rb.position;
+
             if (velocity < 1)
             {
                 velocity += Time.deltaTime * acceleration;
@@ -59,12 +91,10 @@ public class PlayerController : MonoBehaviour
             // Rotate towards the input direction
             transform.rotation = Quaternion.Slerp(
                 transform.rotation,
-                Quaternion.LookRotation(inputDirection),
+                Quaternion.LookRotation(JoyStick.direction),
                 Time.deltaTime * rotationSpeed
             );
 
-            transform.position += inputDirection * speed * Time.deltaTime * velocity;
-            anim.SetFloat(blendHash, velocity);
         }
         else
         {
@@ -75,6 +105,8 @@ public class PlayerController : MonoBehaviour
 
             anim.SetFloat(blendHash, velocity);
         }
+
+        anim.SetFloat(blendHash, velocity);
     }
 
 
@@ -100,47 +132,4 @@ public class PlayerController : MonoBehaviour
         return null;
     }
 
-
-    //Check Platform
-    //     private RuntimePlatform platform
-    //     {
-    //         get
-    //         {
-    // #if UNITY_ANDROID
-    //             return RuntimePlatform.Android;
-    // #elif UNITY_IOS 
-    //             return RuntimePlatform.IPhonePlayer;
-    // #elif UNITY_STANDALONE_OSX
-    //              return RuntimePlatform.OSXPlayer;
-    // #elif UNITY_STANDALONE_WIN
-    //             return RuntimePlatform.WindowsPlayer;
-    // #endif
-    //         }
-    //     }
-
-    //     public bool isTouchInterface
-    //     {
-    //         get
-    //         {
-    // #if UNITY_EDITOR
-    //             // Game is being played in the editor and the selected BuildTarget is either Android or iOS
-    //             if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ||
-    //         EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS)
-    //             {
-    //                 return true;
-    //             }
-    // #endif
-    //             // Game is being played on an Android or iOS device
-    //             if (platform == RuntimePlatform.Android ||
-    //             platform == RuntimePlatform.IPhonePlayer)
-    //             {
-    //                 return true;
-    //             }
-    //             // Game is being played on something other then an Android or iOS device
-    //             else
-    //             {
-    //                 return false;
-    //             }
-    //         }
-    //     }
 }
